@@ -26,9 +26,10 @@ export default function SignInPage() {
       });
 
       const data = await response.json();
+      console.log(data)
 
       if (!data?.success) {
-        throw new Error(data.message || 'Signin failed');
+        window.alert(data?.message || "Something went wrong");
       }else{
         router.push("/")
       }

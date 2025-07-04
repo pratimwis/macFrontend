@@ -28,7 +28,7 @@ export async function signUp({
     const data = await response.json();
 
     if (!data?.success) {
-      throw new Error(data.message || 'Signup failed');
+      window.alert(data?.message || "Signup failed");
     }
 
     return data;
