@@ -12,7 +12,7 @@ export async function signUp({
 }) {
   
   try {
-    const response = await fetch('https://macauthenticate.onrender.com/api/auth/signup', {
+    const response = await fetch('https://macbackend.onrender.com/api/auth/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
