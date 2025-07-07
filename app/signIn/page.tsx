@@ -16,14 +16,17 @@ export default function SignInPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await fetch('https://macbackend.onrender.com/api/auth/signin', {
+     const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/signin`,
+      {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
         body: JSON.stringify(form),
-      });
+      }
+    );
 
       const data = await response.json();
       console.log(data)
@@ -38,7 +41,7 @@ export default function SignInPage() {
       return data;
     } catch (error) {
       console.error('Signin error:', error);
-      throw error;
+
     }
   }
 

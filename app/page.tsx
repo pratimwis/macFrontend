@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function TextToSpeech() {
@@ -6,12 +7,33 @@ export default function TextToSpeech() {
   const [message, setMessage] = useState("");
   const [speaking, setSpeaking] = useState(false);
   const [supported, setSupported] = useState(false);
+  const router = useRouter()
 
   useEffect(() => {
     if ("speechSynthesis" in window) {
       setSupported(true);
     }
   }, []);
+
+  useEffect(() => {
+    async function checkAuth() {
+      const authCheck = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/check`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        }
+      )
+      const response = await authCheck.json(); 
+      if (!response?.success) {
+        router.push('/signIn')
+      }
+    }
+    checkAuth()
+  }, [])
 
   const handleSpeak = () => {
     if (!text.trim()) {
@@ -65,9 +87,8 @@ export default function TextToSpeech() {
               <button
                 onClick={handleSpeak}
                 disabled={speaking}
-                className={`flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-lg transition duration-200 ${
-                  speaking ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-lg transition duration-200 ${speaking ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
               >
                 {speaking ? "Speaking..." : "Convert"}
               </button>

@@ -1,6 +1,5 @@
 'use client'
 
-import { signUp } from '@/api'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -16,20 +15,34 @@ export default function SignUpPage() {
     }
     const router = useRouter();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+      const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
-            const response = await signUp({
-                email: form.email,
-                fullName: form.name,
-                password: form.password,
-               
-            });
-            alert('Signup successful!');
-            console.log(response);
-            router.push("/")
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        email: form.email,
+                        fullName: form.name,
+                        password: form.password,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+            if (!data?.success) {
+                window.alert(data?.message || "Something went wrong");
+            } else {
+                alert('Signup successful!');
+                router.push("/")
+            }
         } catch (error: any) {
-            alert(error.message);
+            alert(error.message || "Signup failed");
         }
     }
 
